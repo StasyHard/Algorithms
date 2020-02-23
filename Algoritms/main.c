@@ -3,19 +3,12 @@
 //  Algoritms
 //
 //  Created by Anastasia Reyngardt on 22.02.2020.
-//  Copyright © 2020 GermanyHome. All rights reserved.
-//
+
 
 #include <stdio.h>
 #include <math.h>
-
-void solution1(void);
-double calculate_index(double m, double h);
-void solution2(void);
-int compare_numbers(int a, int b, int c, int d);
-void solution3(void);
-void swap1(int *a, int *b);
-void swap2(int *a, int *b);
+#include <string.h>
+#include "header.h"
 
 
 int main(int argc, const char * argv[]) {
@@ -25,12 +18,20 @@ int main(int argc, const char * argv[]) {
     solution1();
     
     //Task - 2
-     printf("Task - 2 \n");
+    printf("Task - 2 \n");
     solution2();
     
     //Task - 3
     printf("Task - 3 \n");
     solution3();
+    
+    //Task - 5
+    printf("Task - 5 \n");
+    solution5();
+    
+    //Task - 6
+    printf("Task - 6 \n");
+    solution6();
     
     return 0;
 }
@@ -66,11 +67,12 @@ void solution2() {
     scanf("%lf", &c);
     printf("Input fourth number: ");
     scanf("%lf", &d);
-    int max = compare_numbers(a, b, c, d);
-    printf("Max number - %d \n\n", max);
+    int max1 = max_number1(a, b, c, d);
+    int max2 = max_number2(a, b, c, d);
+    printf("Max1 number - %d, max2 number - %d \n\n", max1, max2);
 }
 
-int compare_numbers(int a, int b, int c, int d) {
+int max_number1(int a, int b, int c, int d) {
     if (a > b && a > c && a > d) {
         return a;
     } else if (b > a && b > c && b > d) {
@@ -80,6 +82,13 @@ int compare_numbers(int a, int b, int c, int d) {
     } else {
         return d;
     }
+}
+
+int max_number2(int a, int b, int c, int d) {
+    int max1 = a > b ? a : b;
+    int max2 = c > d ? c : d;
+    
+    return max1 > max2 ? max1 : max2;
 }
 
 //MARK: - Task - 3
@@ -98,7 +107,7 @@ void solution3() {
     swap1(&a, &b);
     printf("A = %d, B = %d \n", a, b);
     swap2(&a, &b);
-    printf("A = %d, B = %d \n", a, b);
+    printf("A = %d, B = %d \n\n", a, b);
 }
 
 void swap1(int *a, int *b) {
@@ -111,4 +120,61 @@ void swap2(int *a, int *b) {
     *a = *a ^ *b;
     *b = *b ^ *a;
     *a = *a ^ *b;
+}
+
+//MARK: - Task - 5
+/* 5. С клавиатуры вводится номер месяца. Требуется определить, к какому времени года он относится. */
+void solution5() {
+    int month;
+    printf("Inpu the month number: ");
+    scanf("%d", &month);
+    
+    if (month > 1 && month > 12) {
+        printf("There is no such month");
+    } else {
+        define_time_of_year(month);
+    }
+}
+
+void define_time_of_year(int month) {
+    int result = month / 3;
+    switch (result) {
+        case 1:
+            printf("It is spring");
+            break;
+        case 2:
+            printf("This summer");
+            break;
+        case 3:
+            printf("It is fall");
+            break;
+        case 0:
+        case 4:
+            printf("This is winter");
+            break;
+    }
+    printf("\n\n");
+}
+
+//MARK: - Task - 6
+/*6. Ввести возраст человека (от 1 до 150 лет) и вывести его вместе с последующим словом «год», «года» или «лет». */
+void solution6() {
+    int age;
+    printf("Input human age (from 1 to 150 years): ");
+    scanf("%d", &age);
+    char* result = define_ending(age);
+    printf("%d %s \n\n", age, result);
+    
+}
+
+char* define_ending(int age) {
+    int result = age % 10;
+    int result2 = age % 100;
+    if (result == 1 && result2 != 11) {
+        return "год";
+    } else if (result >= 2 && result <= 4 && result2 != 12 && result2 != 13 && result2 != 14) {
+        return "года";
+    } else {
+        return "лет";
+    }
 }
