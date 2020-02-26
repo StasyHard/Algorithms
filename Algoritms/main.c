@@ -4,7 +4,7 @@
 #include <time.h>
 #include "main.h"
 
-#define SIZE 20
+#define SIZE 100
 
 //Рейнгардт Анастасия
 
@@ -44,16 +44,16 @@ void solution1() {
     
     printf("Array 1\n");
     print(SIZE, arr);
-    sort_array(arr);
+    buble_sort(arr);
     print(SIZE, arr);
     
     printf("Array 2\n");
     print(SIZE, arr2);
-    sort_array2(arr2);
+    buble_sort2(arr2);
     print(SIZE, arr2);
 }
 
-void sort_array(int arr[]) {
+void buble_sort(int arr[]) {
     int count = 0;
     int i, j;
     for (i = 1; i < SIZE; i++) {
@@ -67,7 +67,7 @@ void sort_array(int arr[]) {
     printf("Count = %d \n", count);
 }
 
-void sort_array2(int arr[]) {
+void buble_sort2(int arr[]) {
     int count = 0;
     int i, j;
     for (i = 1; i <= SIZE; i++) {
@@ -88,24 +88,93 @@ void sort_array2(int arr[]) {
 //MARK: - TASK 2
 /* 2. *Реализовать шейкерную сортировку. */
 void solution2() {
-    int arr[SIZE];//{53, 53, 77, 48, 40, 6, 64, 90, 0, 34, 69, 6, 11, 38, 53, 81, 46, 7, 99, 38};
+    int arr[SIZE];//{53, 77, 48, 40, 6, 64, 90, 0, 34, 69, 6, 11, 38, 53, 81, 46, 7, 99, 38};
     
     fill_array(SIZE, arr);
     print(SIZE, arr);
+    shaker_sort(arr);
+    print(SIZE, arr);
+}
+
+void shaker_sort(int arr[]) {
+    int count = 0;
+    int i, j;
+    int first = 0;
+    int last = SIZE - 1;
+    for (i = 1; i < last; i++) {
+        int count_swap = 0;
+        if (i % 2 == 1) {
+            for (j = first; j < last; j++) {
+                count++;
+                if (arr[j] > arr[j + 1]) {
+                    swap(&arr[j], &arr[j + 1]);
+                    count_swap++;
+                }
+            }
+            last = last - 1;
+            
+        } else {
+            count++;
+            for (j = last + 1; j > first; j--) {
+                if (arr[j - 1] > arr[j]) {
+                    swap(&arr[j - 1], &arr[j]);
+                    count_swap++;
+                }
+            }
+            first = first + 1;
+        }
+        
+        if (count_swap == 0) break;
+    }
+    printf("Count = %d \n", count);
 }
 
 //MARK: - TASK 3
 /* 3. Реализовать бинарный алгоритм поиска в виде функции, которой передается отсортированный массив. Функция возвращает индекс найденного элемента или -1, если элемент не найден. */
 void solution3() {
-    
+    int arr[SIZE];
+    int num;
+    fill(SIZE, arr);
+    print(SIZE, arr);
+    printf("Input number from 1 to 100: ");
+    scanf("%d", &num);
+    printf("Index %d", binary_search(arr, num));
 }
 
+int binary_search(int arr[], int num) {
+    int count = 0;
+    int left = 0;
+    int right = SIZE - 1;
+    int mid = 0;
+    while (left <= right) {
+        mid = (left + right) / 2;
+        count++;
+        if (arr[mid] == num) {
+            printf("Count - %d\n", count);
+            return mid;
+        }
+        if (arr[mid] < num) {
+            left = mid + 1;
+        }
+        if (arr[mid] > num) {
+            right = mid - 1;
+        }
+    }
+    printf("Count - %d\n", count);
+    return -1;
+}
+
+void fill(int l, int arr[]) {
+    for (int i = 0; i < SIZE; i++) {
+        arr[i] = i + 1;
+    }
+}
 
 //MARK: - Supporting func
 
 void fill_array(int l, int arr[]) {
     srand(time(NULL));
-    for (int i = 0; i<SIZE; i++)
+    for (int i = 0; i < SIZE; i++)
     {
         arr[i] = rand() % 100;
     }
