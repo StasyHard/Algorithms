@@ -4,7 +4,7 @@
 #include <time.h>
 #include "main.h"
 
-#define SIZE 100
+#define SIZE 50
 
 //Рейнгардт Анастасия
 
@@ -46,7 +46,7 @@ void solution1() {
     print(SIZE, arr);
     buble_sort(arr);
     print(SIZE, arr);
-    
+    printf("______________\n");
     printf("Array 2\n");
     print(SIZE, arr2);
     buble_sort2(arr2);
@@ -56,7 +56,7 @@ void solution1() {
 void buble_sort(int arr[]) {
     int count = 0;
     int i, j;
-    for (i = 1; i < SIZE; i++) {
+    for (i = 0; i < SIZE; i++) {
         for (j = 0; j < SIZE - 1; j++) {
             count++;
             if (arr[j] > arr[j + 1]) {
@@ -88,12 +88,23 @@ void buble_sort2(int arr[]) {
 //MARK: - TASK 2
 /* 2. *Реализовать шейкерную сортировку. */
 void solution2() {
-    int arr[SIZE];//{53, 77, 48, 40, 6, 64, 90, 0, 34, 69, 6, 11, 38, 53, 81, 46, 7, 99, 38};
-    
+    int arr[SIZE];
     fill_array(SIZE, arr);
+    int arr2[SIZE];
+    int i;
+    for(i = 0; i < SIZE; i++) {
+        arr2[i] = arr[i];
+    }
+    
+    printf("Array 1\n");
     print(SIZE, arr);
     shaker_sort(arr);
     print(SIZE, arr);
+    printf("______________\n");
+    printf("Array 2\n");
+    print(SIZE, arr2);
+    shaker_sort2(arr2);
+    print(SIZE, arr2);
 }
 
 void shaker_sort(int arr[]) {
@@ -101,33 +112,72 @@ void shaker_sort(int arr[]) {
     int i, j;
     int first = 0;
     int last = SIZE - 1;
-    for (i = 1; i < last; i++) {
+    for (i = 1; i <= SIZE; i++) {
         int count_swap = 0;
         if (i % 2 == 1) {
-            for (j = first; j < last; j++) {
+            last = last - 1;
+            for (j = first; j <= last; j++) {
                 count++;
                 if (arr[j] > arr[j + 1]) {
                     swap(&arr[j], &arr[j + 1]);
                     count_swap++;
                 }
             }
-            last = last - 1;
-            
         } else {
-            count++;
-            for (j = last + 1; j > first; j--) {
+            first = first + 1;
+            for (j = last + 1; j >= first; j--) {
+                count++;
                 if (arr[j - 1] > arr[j]) {
                     swap(&arr[j - 1], &arr[j]);
                     count_swap++;
                 }
             }
-            first = first + 1;
         }
-        
         if (count_swap == 0) break;
     }
     printf("Count = %d \n", count);
 }
+
+//еще один вариант решения
+void shaker_sort2(int arr[]) {
+    int elemIndex = 0;
+    int nextIndex = 1;
+    int left = 0;
+    int right = SIZE - 1;
+    int count = 0;
+    
+    while (left != right && right - left > 1) {
+        count++;
+        if(nextIndex == right){
+            if(arr[elemIndex] > arr[nextIndex]){
+                swap(&arr[elemIndex], &arr[nextIndex]);
+            }
+            right = elemIndex;
+            nextIndex = elemIndex - 1;
+        } else if(nextIndex == left){
+            if(arr[nextIndex] > arr[elemIndex]){
+                swap(&arr[elemIndex], &arr[nextIndex]);
+            }
+            left = elemIndex;
+            nextIndex = elemIndex + 1;
+        }
+        if(elemIndex < nextIndex){
+            if(arr[elemIndex] > arr[nextIndex]){
+                swap(&arr[elemIndex], &arr[nextIndex]);
+            }
+            elemIndex++;
+            nextIndex++;
+        } else {
+            if(arr[nextIndex] > arr[elemIndex]){
+                swap(&arr[elemIndex], &arr[nextIndex]);
+            }
+            elemIndex--;
+            nextIndex--;
+        }
+    }
+    printf("Count = %d \n", count);
+}
+
 
 //MARK: - TASK 3
 /* 3. Реализовать бинарный алгоритм поиска в виде функции, которой передается отсортированный массив. Функция возвращает индекс найденного элемента или -1, если элемент не найден. */
@@ -173,7 +223,6 @@ void fill(int l, int arr[]) {
 //MARK: - Supporting func
 
 void fill_array(int l, int arr[]) {
-    srand(time(NULL));
     for (int i = 0; i < SIZE; i++)
     {
         arr[i] = rand() % 100;

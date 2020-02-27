@@ -22,6 +22,7 @@ void buble_sort2(int arr[]);
 
 void solution2(void);
 void shaker_sort(int arr[]);
+void shaker_sort2(int arr[]);
 
 void solution3(void);
 int binary_search(int arr[], int num);
