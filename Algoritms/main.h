@@ -11,7 +11,13 @@
 
 #include <stdio.h>
 
+struct stack;
+void init(struct stack *stk);
+void push(struct stack *stk, int number);
+int pop(struct stack *stk);
+
 void solution1(void);
+void convert_number(struct stack *stk, int number);
 
 void solution2(void);
 
