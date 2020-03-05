@@ -39,7 +39,6 @@ int main(int argc, const char * argv[]) {
 }
 
 /* 1. Реализовать перевод из десятичной в двоичную систему счисления с использованием стека. */
-
 struct stack {
     int elem[MaxN];
     int top;
@@ -69,7 +68,6 @@ int pop(struct stack *stk) {
 }
 
 void solution1() {
-    
     struct stack *stk;
     stk = (struct stack*)malloc(sizeof(struct stack));
     init(stk);
@@ -77,9 +75,8 @@ void solution1() {
     int number;
     printf("Input decimal number: ");
     scanf("%d", &number);
+    printf("In binary system - ");
     convert_number(stk, number);
-    
-    
 }
 
 void convert_number(struct stack *stk, int number) {
@@ -93,6 +90,26 @@ void convert_number(struct stack *stk, int number) {
         printf("%d", pop(stk));
     }
 }
+
+/* 2. Добавить в программу «реализация стека на основе односвязного списка» проверку на выделение памяти. Если память не выделяется, то выводится соответствующее сообщение. Постарайтесь создать ситуацию, когда память не будет выделяться (добавлением большого количества данных). */
+struct TNode {
+    char value;
+    struct TNode *next;
+};
+
+typedef struct TNode Node;
+
+struct stack1 {
+    
+    Node *head;
+    int size;
+    int maxSize;
+} Stack;
+
+void push1(struct stack *stack, char value) {
+    //if
+}
+
 
 
 

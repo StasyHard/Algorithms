@@ -20,6 +20,7 @@ void solution1(void);
 void convert_number(struct stack *stk, int number);
 
 void solution2(void);
+void push1(struct stack *stack, char value);
 
 void solution3(void);
 
