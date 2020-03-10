@@ -10,6 +10,7 @@
 //#include <malloc.h>
 #include "main.h"
 #define MaxN 10
+#define MAX 260
 
 //Рейнгардт Анастасия
 
@@ -42,8 +43,19 @@ int main(int argc, const char * argv[]) {
 //MARK: - 1
 /* 1. Реализовать простейшую хеш-функцию. На вход функции подается строка, на выходе сумма кодов символов. */
 
+
+unsigned int hashLy(const char * str) {
+    unsigned int hash = 0;
+    for(; *str; str++)
+        hash = (hash * 1664525) + (unsigned char)(*str) + 1013904223;
+    return hash;
+}
+
+
 void solution1() {
-    
+    char string[20] = "Hello, world";
+    unsigned int result = hashLy(string);
+    printf("%u", result);
 }
 
 
@@ -91,6 +103,13 @@ Node* getTreeNode(int value, Node* parent) {
     return tmp;
 }
 
+//Периодически возникает 2 ошибки:
+/*Первая ошибка - Algoritms(22356,0x1000d2dc0) malloc: Incorrect checksum for freed object 0x100701488: probably modified after being freed.
+ Corrupt value: 0x100701820
+ Algoritms(22356,0x1000d2dc0) malloc: *** set a breakpoint in malloc_error_break to debug
+ 
+ Вторая - в tmp оказывается пустая Noda
+ Понять причину так и не смогла */
 void insertNode(Node** head, int value) {
     Node* tmp = NULL;
     if (*head == NULL) {
@@ -121,7 +140,7 @@ void insertNode(Node** head, int value) {
 //Прямой обход бинарного дерева
 void preOrder(Node* root) {
     if (root == NULL) {
-                return;
+        return;
     }
     if (root->data) {
         printf("%d ", root->data);
@@ -133,7 +152,7 @@ void preOrder(Node* root) {
 //Симметричный обход бинарного дерева
 void inOrder(Node* root) {
     if (root == NULL) {
-         return;
+        return;
     }
     inOrder(root->left);
     if (root->data) {
@@ -145,7 +164,7 @@ void inOrder(Node* root) {
 //Обратный обход бинарного дерева
 void postOrder(Node* root) {
     if (root == NULL) {
-         return;
+        return;
     }
     postOrder(root->left);
     postOrder(root->right);
@@ -186,7 +205,7 @@ void solution2() {
     printf("\n Введите одно из чисел - 4, 5, 6, 7, 9, 10, 15, 16, 20, 21: \n");
     scanf("%d", &number);
     Node *elem = seachInTree(Tree, number);
-    printf("Parent - %d, data - %d, left element data - %d, right element data - %d", elem->parent->data, elem->data, elem->left->data, elem->right->data);
+    printf("Parent - %d", elem->parent->data);
     
 }
 
