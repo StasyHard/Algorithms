@@ -9,8 +9,8 @@
 #include <stdlib.h>
 //#include <malloc.h>
 #include "main.h"
-#define MaxN 10
-#define MAX 260
+#define MaxN 6
+#define infinity 99
 
 //Рейнгардт Анастасия
 
@@ -41,185 +41,110 @@ int main(int argc, const char * argv[]) {
 }
 
 //MARK: - 1
-/* 1. Реализовать простейшую хеш-функцию. На вход функции подается строка, на выходе сумма кодов символов. */
-
-
-unsigned int hashLy(const char * str) {
-    unsigned int hash = 0;
-    for(; *str; str++)
-        hash = (hash * 1664525) + (unsigned char)(*str) + 1013904223;
-    return hash;
-}
-
+/* 1. Написать функции, которые считывают матрицу смежности из файла и выводят ее на экран. */
+const char* fileName = "/Users/anastasiareyngardt/Documents/Learning/GeekBrains/matrix.txt";
+int matrix[MaxN][MaxN];
+int count = 6;
 
 void solution1() {
-    char string[20] = "Hello, world";
-    unsigned int result = hashLy(string);
-    printf("%u", result);
+    readFile();
+    printf("Graph matrix:\n");
+    printMatrix(matrix);
 }
 
+void readFile() {
+    int i, j;
+    FILE* file = fopen(fileName, "r");
+    if (file == NULL) {
+        printf("Can't open file");
+        exit(1);
+    }
+    for (i = 0; i < count; i++) {
+        for (j = 0; j < count; j++) {
+            fscanf(file, "%d", &matrix[i][j]);
+        }
+    }
+    fclose(file);
+}
+
+void printMatrix(int matrix[MaxN][MaxN]) {
+    printf("%s", "      ");
+    for (int i = 0; i < count; i++)
+        printf("%c(%d) ", 65 + i, i);
+    printf("\n");
+    for (int i = 0; i < count; i++)
+    {
+        printf("%c(%d)", 65 + i, i);
+        for (int j = 0; j < count; j++)
+            printf("%5d", (matrix[i][j] == infinity) ? 0 : matrix[i][j]);
+        printf("\n");
+    }
+}
 
 
 //MARK: - 2
-/* 2. Переписать программу, реализующую двоичное дерево поиска.
- а) Добавить в него обход дерева различными способами;
- б) Реализовать поиск в двоичном дереве поиска;
- в) *Добавить в программу обработку командной строки, с помощью которой можно указывать, из какого файла считывать данные, каким образом обходить дерево. */
-typedef struct Node {
-    int data;
-    struct Node *left;
-    struct Node *right;
-    struct Node *parent;
-} Node;
+/* 2. Написать рекурсивную функцию обхода графа в глубину. */
 
-void printTree(Node* root) {
-    if (root) {
-        printf("%d", root->data);
-        if (root->left || root->right) {
-            printf("(");
-            
-            if (root->left) {
-                printTree(root->left);
-            } else {
-                printf("NULL");
-            }
-            printf(",");
-            
-            if (root->right) {
-                printTree(root->right);
-            } else {
-                printf("NULL");
-            }
-            printf(")");
-        }
-    }
-}
-
-Node* getTreeNode(int value, Node* parent) {
-    Node* tmp = (Node*)malloc(sizeof(Node*));
-    tmp->left = tmp->right = NULL;
-    tmp->data = value;
-    tmp->parent = parent;
-    return tmp;
-}
-
-//Периодически возникает 2 ошибки:
-/*Первая ошибка - Algoritms(22356,0x1000d2dc0) malloc: Incorrect checksum for freed object 0x100701488: probably modified after being freed.
- Corrupt value: 0x100701820
- Algoritms(22356,0x1000d2dc0) malloc: *** set a breakpoint in malloc_error_break to debug
- 
- Вторая - в tmp оказывается пустая Noda
- Понять причину так и не смогла */
-void insertNode(Node** head, int value) {
-    Node* tmp = NULL;
-    if (*head == NULL) {
-        *head = getTreeNode(value, NULL);
-        return;
-    }
-    tmp = *head;
-    while (tmp) {
-        if (value > tmp->data) {
-            if (tmp->right) {
-                tmp = tmp->right;
-                continue;
-            } else {
-                tmp->right = getTreeNode(value, tmp);
-                return;
-            }
-        }  else if (value < tmp->data) {
-            if (tmp->left) {
-                tmp = tmp->left;
-                continue;
-            } else {
-                tmp->left = getTreeNode(value, tmp);
-                return;
-            }
-        }
-    }
-}
-//Прямой обход бинарного дерева
-void preOrder(Node* root) {
-    if (root == NULL) {
-        return;
-    }
-    if (root->data) {
-        printf("%d ", root->data);
-        preOrder(root->left);
-        preOrder(root->right);
-    }
-}
-
-//Симметричный обход бинарного дерева
-void inOrder(Node* root) {
-    if (root == NULL) {
-        return;
-    }
-    inOrder(root->left);
-    if (root->data) {
-        printf("%d ", root->data);
-    }
-    inOrder(root->right);
-}
-
-//Обратный обход бинарного дерева
-void postOrder(Node* root) {
-    if (root == NULL) {
-        return;
-    }
-    postOrder(root->left);
-    postOrder(root->right);
-    if (root->data) {
-        printf("%d ", root->data);
-    }
-}
-
-//Поиск в двоичном дереве поиска
-Node *seachInTree(Node* root, int number) {
-    if (root == NULL || root->data == number) {
-        return root;
-    }
-    if (number > root->data) {
-        return seachInTree(root->right, number);
-    } else {
-        return seachInTree(root->left, number);
-    }
-}
+// матрица смежности
+int matrix2[MaxN][MaxN] = {
+    { 0, 1, 1, 0, 0, 0},
+    { 1, 0, 1, 1, 0, 0},
+    { 1, 1, 0, 0, 0, 0},
+    { 0, 1, 0, 0, 1, 0},
+    { 0, 0, 0, 1, 0, 1},
+    { 0, 0, 0, 0, 1, 0} };
+int visited[MaxN];
 
 void solution2() {
-    int array[MaxN] = {10, 7, 5, 6, 16, 9, 15, 20, 21, 4};
-    Node *Tree = NULL;
-    int i;
-    for (i = 0; i < MaxN; i++) {
-        int value = array[i];
-        insertNode(&Tree, value);
-    }
-    printf("Tree");
-    printTree(Tree);
-    printf("\nПрямой обход бинарного дерева - ");
-    preOrder(Tree);
-    printf("\nСимметричный обход бинарного дерева - ");
-    inOrder(Tree);
-    printf("\nОбратный обход бинарного дерева - ");
-    postOrder(Tree);
-    int number;
-    printf("\n Введите одно из чисел - 4, 5, 6, 7, 9, 10, 15, 16, 20, 21: \n");
-    scanf("%d", &number);
-    Node *elem = seachInTree(Tree, number);
-    printf("Parent - %d", elem->parent->data);
-    
+    printMatrix(matrix2);
+    visitedIsFalse();
+    int start = 3; // стартовая вершина
+    graphTraversalInDepth(start);
+}
+
+// исходно все вершины равны 0
+void visitedIsFalse() {
+    for (int i = 0; i < 7; i++) {
+           visited[i] = 0;
+       }
+}
+
+void graphTraversalInDepth(int start) {
+    visited[start] = 1;
+    printf("%c(%d) ", 65 + start, start);
+    for (int i = 0; i < MaxN; i++)
+        if ((matrix2[start][i] != 0) && (visited[i] == 0))
+            graphTraversalInDepth(i);
 }
 
 //MARK: - 3
-/* 3. *Разработать базу данных студентов из полей «Имя», «Возраст», «Табельный номер», в которой использовать все знания, полученные на уроках.
- Считайте данные в двоичное дерево поиска. Реализуйте поиск по какому-нибудь полю базы данных (возраст, вес). */
+/* 3. Написать функцию обхода графа в ширину. */
 
-
+int queue[MaxN];
 
 void solution3() {
-    
-    
+    printMatrix(matrix2);
+    visitedIsFalse();
+    int start = 3; // стартовая вершина
+    graphWidthTraversal(start);
 }
 
+void graphWidthTraversal(int start) {
+    queue[0] = start;
+    visited[start] = 1;
+    int r = 0, w = 1;
+    
+    while (r < w) {
+        int curr = queue[r++];
+        printf("%c(%d) ", 65 + curr, curr);
+        for (int i = 0; i < MaxN; i++) {
+            if (!visited[i] && matrix2[curr][i]) {
+                visited[i] = 1;
+                queue[w++] = i;
+            }
+        }
+    }
+}
 
 //MARK: - supporting function
 void menu() {
