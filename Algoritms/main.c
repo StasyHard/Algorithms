@@ -9,8 +9,7 @@
 #include <stdlib.h>
 //#include <malloc.h>
 #include "main.h"
-#define MaxN 6
-#define infinity 99
+#define SIZE 100
 
 //Рейнгардт Анастасия
 
@@ -41,110 +40,122 @@ int main(int argc, const char * argv[]) {
 }
 
 //MARK: - 1
-/* 1. Написать функции, которые считывают матрицу смежности из файла и выводят ее на экран. */
-const char* fileName = "/Users/anastasiareyngardt/Documents/Learning/GeekBrains/matrix.txt";
-int matrix[MaxN][MaxN];
-int count = 6;
+/* 1. Реализовать сортировку подсчетом. */
 
 void solution1() {
-    readFile();
-    printf("Graph matrix:\n");
-    printMatrix(matrix);
+    
 }
 
-void readFile() {
-    int i, j;
-    FILE* file = fopen(fileName, "r");
-    if (file == NULL) {
-        printf("Can't open file");
-        exit(1);
-    }
-    for (i = 0; i < count; i++) {
-        for (j = 0; j < count; j++) {
-            fscanf(file, "%d", &matrix[i][j]);
-        }
-    }
-    fclose(file);
-}
-
-void printMatrix(int matrix[MaxN][MaxN]) {
-    printf("%s", "      ");
-    for (int i = 0; i < count; i++)
-        printf("%c(%d) ", 65 + i, i);
-    printf("\n");
-    for (int i = 0; i < count; i++)
-    {
-        printf("%c(%d)", 65 + i, i);
-        for (int j = 0; j < count; j++)
-            printf("%5d", (matrix[i][j] == infinity) ? 0 : matrix[i][j]);
-        printf("\n");
-    }
-}
 
 
 //MARK: - 2
-/* 2. Написать рекурсивную функцию обхода графа в глубину. */
-
-// матрица смежности
-int matrix2[MaxN][MaxN] = {
-    { 0, 1, 1, 0, 0, 0},
-    { 1, 0, 1, 1, 0, 0},
-    { 1, 1, 0, 0, 0, 0},
-    { 0, 1, 0, 0, 1, 0},
-    { 0, 0, 0, 1, 0, 1},
-    { 0, 0, 0, 0, 1, 0} };
-int visited[MaxN];
+/* 2. Реализовать быструю сортировку. */
+int counter;
 
 void solution2() {
-    printMatrix(matrix2);
-    visitedIsFalse();
-    int start = 3; // стартовая вершина
-    graphTraversalInDepth(start);
-}
-
-// исходно все вершины равны 0
-void visitedIsFalse() {
-    for (int i = 0; i < 7; i++) {
-           visited[i] = 0;
-       }
-}
-
-void graphTraversalInDepth(int start) {
-    visited[start] = 1;
-    printf("%c(%d) ", 65 + start, start);
-    for (int i = 0; i < MaxN; i++)
-        if ((matrix2[start][i] != 0) && (visited[i] == 0))
-            graphTraversalInDepth(i);
-}
-
-//MARK: - 3
-/* 3. Написать функцию обхода графа в ширину. */
-
-int queue[MaxN];
-
-void solution3() {
-    printMatrix(matrix2);
-    visitedIsFalse();
-    int start = 3; // стартовая вершина
-    graphWidthTraversal(start);
-}
-
-void graphWidthTraversal(int start) {
-    queue[0] = start;
-    visited[start] = 1;
-    int r = 0, w = 1;
+    counter = 0;
     
-    while (r < w) {
-        int curr = queue[r++];
-        printf("%c(%d) ", 65 + curr, curr);
-        for (int i = 0; i < MaxN; i++) {
-            if (!visited[i] && matrix2[curr][i]) {
-                visited[i] = 1;
-                queue[w++] = i;
+    int arr[SIZE];
+    fillArray(arr);
+    printf("\nUnsorted array:\n");
+    printArray(arr);
+    
+    qs(arr, 0, SIZE - 1);
+    //quickSort(arr, 0, SIZE - 1);
+    printf("\nSorted array:\n");
+    printArray(arr);
+    printf("\nSwap count - %d", counter);
+}
+
+void qs(int* arr, int first, int last) {
+    int leftBorder = first;
+    int rightBorder = last;
+    //элемент в центре массива, который берем для сравнения
+    int pivot = arr[(first + last) / 2];
+    
+    do {
+        //пока границы меньше pivot перевещаем границы
+        while (arr[leftBorder] < pivot) {
+            leftBorder++;
+        }
+        while (arr[rightBorder] > pivot) {
+            rightBorder--;
+        }
+        //меняем местами значения и снова сдвигаем границы
+        if(leftBorder <= rightBorder) {
+            if (arr[leftBorder] > arr[rightBorder]) {
+                int temp = arr[leftBorder];
+                arr[leftBorder] = arr[rightBorder];
+                arr[rightBorder] = temp;
+                counter++;
             }
+            leftBorder++;
+            rightBorder--;
+        }
+    } while (leftBorder <= rightBorder);
+    //когда границы сомкнулись, вызываем функцию рекурсивно для левой и правой стороны массива
+    if (leftBorder < last)
+        qs(arr, leftBorder, last);
+    if (first < rightBorder)
+        qs(arr, first, rightBorder);
+}
+
+
+
+void quickSort(int *arr, int left, int right) {
+    int leftBorder = left;
+    int rightBorder = right;
+    int pivot = arr[left];
+    
+    while (left < right) {
+        while (arr[right] >= pivot && left != right) {
+            right--;
+        }
+        if (left != right) {
+            arr[left] = arr[right];
+            left++;
+        }
+        
+        while (arr[left] <= pivot && left != right) {
+            left++;
+        }
+        if (left != right) {
+            arr[right] = arr[left];
+            right--;
         }
     }
+    arr[left] = pivot;
+    pivot = left;
+    left = leftBorder;
+    right = rightBorder;
+    if (left < pivot)
+        quickSort(arr, left, pivot - 1);
+    if (right > pivot)
+        quickSort(arr, pivot + 1, right);
 }
+
+//заполняем массив рандомными числами от -100 до 100
+void fillArray(int *arr) {
+    for (int i = 0; i < SIZE; i++) {
+        arr[i] = rand() % 201 - 100;
+    }
+}
+
+//печатаем массив
+void printArray(int *arr) {
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d ", arr[i]);
+    }
+}
+
+
+//MARK: - 3
+/* 3. *Реализовать сортировку слиянием. */
+
+void solution3() {
+    
+}
+
 
 //MARK: - supporting function
 void menu() {
